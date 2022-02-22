@@ -1,10 +1,29 @@
-#include <stdio.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#ifdef __unix__         
+  #include <unistd.h>
+	#include <stdio.h>
+	#include <netdb.h>
+	#include <netinet/in.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <sys/socket.h>
+	#include <sys/types.h>
+
+#elif defined(_WIN32) || defined(WIN32) 
+  #define OS_Windows
+  #include <io.h>
+  #include <winsock2.h>
+	#include <ws2tcpip.h>
+	#include <iphlpapi.h>
+	#include <ws2def.h>
+  #include <windows.h>
+	#include <unistd.h>
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <sys/types.h>
+	
+#endif
+
 #define MAX 80
 #define PORT 4200
 #define SA struct sockaddr
@@ -40,47 +59,96 @@ int main()
 	int sockfd, connfd, len;
 	struct sockaddr_in servaddr, cli;
 
-	// criação e verificação de soquete
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd == -1) {
-		printf("falha ao tentar criar socket...\n");
-		exit(0);
-	}
-	else
-		printf("Iniciando Chat Rum...\n");
-	bzero(&servaddr, sizeof(servaddr));
+	#ifdef OS_Windows
+		/* Windows */	
+		// criação e verificação de soquete
+		sockfd = socket(AF_INET, SOCK_STREAM, 0);
+		if (sockfd == -1) {
+			printf("falha ao tentar criar socket...\n");
+			exit(0);
+		}
+		else
+			printf("Iniciando Chat Rum...\n");
+		bzero(&servaddr, sizeof(servaddr));
 
-	// especifícar IP, PORT
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servaddr.sin_port = htons(PORT);
+		// especifícar IP, PORT
+		servaddr.sin_family = AF_INET;
+		servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+		servaddr.sin_port = htons(PORT);
 
-	// vinculando o soquete recém-criado ao IP
-	if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
-		printf("falha ao tentar ligar o socket...\n");
-		exit(0);
-	}
-	else
-		printf("\n");
+		// vinculando o soquete recém-criado ao IP
+		if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
+			printf("falha ao tentar ligar o socket...\n");
+			exit(0);
+		}
+		else
+			printf("\n");
 
-	// verificar funcionamento do servidor com o cliente
-	if ((listen(sockfd, 5)) != 0) {
-		printf("falha ao tentar ouvir servidor...\n");
-		exit(0);
-	}
-	else
-		printf("Escutando..\n");
-	len = sizeof(cli);
-	// aceite o pacote de dados do cliente
-	connfd = accept(sockfd, (SA*)&cli, &len);
-	if (connfd < 0) {
-		printf("falha ao tentar aceitar pacotes do cliente...\n");
-		exit(0);
-	}
-	else
-		printf("conectando ao cliente...\n");
-	// função para conversar entre cliente e servidor
-	func(connfd);
-	// depois de conversar, feche o socket
-	close(sockfd);
+		// verificar funcionamento do servidor com o cliente
+		if ((listen(sockfd, 5)) != 0) {
+			printf("falha ao tentar ouvir servidor...\n");
+			exit(0);
+		}
+		else
+			printf("Escutando..\n");
+		len = sizeof(cli);
+		// aceite o pacote de dados do cliente
+		connfd = accept(sockfd, (SA*)&cli, &len);
+		if (connfd < 0) {
+			printf("falha ao tentar aceitar pacotes do cliente...\n");
+			exit(0);
+		}
+		else
+			printf("conectando ao cliente...\n");
+		// função para conversar entre cliente e servidor
+		func(connfd);
+		// depois de conversar, feche o socket
+		close(sockfd);
+		
+	#else
+	  /* GNU/Linux */
+		// criação e verificação de soquete
+		sockfd = socket(AF_INET, SOCK_STREAM, 0);
+		if (sockfd == -1) {
+			printf("falha ao tentar criar socket...\n");
+			exit(0);
+		}
+		else
+			printf("Iniciando Chat Rum...\n");
+		bzero(&servaddr, sizeof(servaddr));
+
+		// especifícar IP, PORT
+		servaddr.sin_family = AF_INET;
+		servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+		servaddr.sin_port = htons(PORT);
+
+		// vinculando o soquete recém-criado ao IP
+		if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
+			printf("falha ao tentar ligar o socket...\n");
+			exit(0);
+		}
+		else
+			printf("\n");
+
+		// verificar funcionamento do servidor com o cliente
+		if ((listen(sockfd, 5)) != 0) {
+			printf("falha ao tentar ouvir servidor...\n");
+			exit(0);
+		}
+		else
+			printf("Escutando..\n");
+		len = sizeof(cli);
+		// aceite o pacote de dados do cliente
+		connfd = accept(sockfd, (SA*)&cli, &len);
+		if (connfd < 0) {
+			printf("falha ao tentar aceitar pacotes do cliente...\n");
+			exit(0);
+		}
+		else
+			printf("conectando ao cliente...\n");
+		// função para conversar entre cliente e servidor
+		func(connfd);
+		// depois de conversar, feche o socket
+		close(sockfd);
+	#endif 
 }
