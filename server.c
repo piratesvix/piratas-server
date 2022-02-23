@@ -4,7 +4,7 @@
 	#include <netdb.h>
 	#include <netinet/in.h>
 	#include <stdlib.h>
-	#include <string.h>
+	#include <strings.h>
 	#include <sys/socket.h>
 	#include <sys/types.h>
 
@@ -19,7 +19,7 @@
 	#include <unistd.h>
 	#include <stdio.h>
 	#include <stdlib.h>
-	#include <string.h>
+	#include <strings.h>
 	#include <sys/types.h>
 	
 #endif
@@ -54,8 +54,7 @@ void func(int connfd)
 	}
 }
 
-int main()
-{
+int main() {
 	int sockfd, connfd, len;
 	struct sockaddr_in servaddr, cli;
 

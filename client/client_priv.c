@@ -1,8 +1,26 @@
-#include <netdb.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
+#ifdef __unix__     
+	#include <netdb.h>
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <sys/socket.h>
+
+#elif defined(_WIN32) || defined(WIN32) 
+  #define OS_Windows
+  #include <io.h>
+  #include <winsock2.h>
+	#include <ws2tcpip.h>
+	#include <iphlpapi.h>
+	#include <ws2def.h>
+  #include <windows.h>
+	#include <unistd.h>
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <strings.h>
+	#include <sys/types.h>
+	
+#endif
+
 #define MAX 80
 #define PORT 4200
 #define SA struct sockaddr
@@ -28,6 +46,7 @@ void func(int sockfd) {
 }
 
 int main() {
+
 	int sockfd, connfd;
 	struct sockaddr_in servaddr, cli;
 
