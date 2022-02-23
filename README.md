@@ -6,7 +6,7 @@ Piratas Server é um chat básico de código aberto para comunicar com os membro
 ![alt text](docs/assets/img/diagrama-chat-socket-tcp.png)
 
 <br>
-Sua primeira versão é escrito em C/C++
+Versão do cluster escrito em Rust
 <br><br>
 
 #### Tutorial
@@ -15,16 +15,8 @@ Baixe ou clone o repositório `https://github.com/piratesvix/piratas-server`
 
 <br>
 
-###### Compilar projeto na linguagem C
+###### Compilar projeto na linguagem Rust
 
 ```sh
-gcc server.c -c <nome-do-executável>
-```
-
-<br>
-
-###### Compilar projeto na linguagem C++
-
-```sh
-g++ server.c -o <nome-do-executável>
+cargo build
 ```
