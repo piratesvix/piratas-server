@@ -14,6 +14,7 @@ Sua primeira versão é escrito em C/C++
 Baixe ou clone o repositório `https://github.com/piratesvix/piratas-server`
 
 <br>
+<br>
 
 ###### Compilar projeto na linguagem C
 
@@ -23,6 +24,8 @@ gcc server.c -c <nome-do-executável>
 
 <br>
 
+
+choco install make
 ###### Compilar projeto na linguagem C++
 
 ```sh
