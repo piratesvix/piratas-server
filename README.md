@@ -24,10 +24,22 @@ gcc server.c -c <nome-do-executável>
 
 <br>
 
-
-choco install make
 ###### Compilar projeto na linguagem C++
 
 ```sh
 g++ server.c -o <nome-do-executável>
 ```
+
+<br>
+<br>
+
+###### Compilar projeto com Make
+
+Make é uma ferramenta que controla a geração de executáveis e outros arquivos. Com ele você pode compilar seu programa a partir de um arquivo chamado makefile.
+
+No Windows é preciso instalar a ferraenta através do chocolatey `choco install make` e em seguida você  já pode construir seu executável rodando o comando:
+ 
+```sh
+make all
+```
+
